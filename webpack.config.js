@@ -25,6 +25,11 @@ module.exports = {
 			}, {
 				loader: 'css-loader'
 			}, {
+				loader: 'autoprefixer-loader',
+				options: {
+					browsers: ["last 2 version", "Firefox 15"]
+				}
+			}, {
 				loader: 'sass-loader'
 			}]
 		}, {
