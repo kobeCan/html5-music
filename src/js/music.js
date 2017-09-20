@@ -50,10 +50,42 @@ Music.prototype = {
 		source.buffer = buffer;
 		source.start(0);
 		if (this.options.canvas) {
-			this._drawSpectrum(analyser);
+			this._drawRectangleSpectrum(analyser);
 		}
 	},
-	_drawSpectrum: function (analyser) {
+	_drawLineSpectrum: function (analyser) {
+		let opts = this.options,
+			can = document.getElementById(opts.canvas),
+			ctx = can.getContext('2d'),
+			canvasW = opts.width,
+			canvasH = opts.height;
+		
+		can.width = canvasW;
+		can.height = canvasH;
+
+		let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+		gradient.addColorStop(1, '#0f0');
+		gradient.addColorStop(0.5, '#ff0');
+		gradient.addColorStop(0, '#f00');
+		ctx.fillStyle = gradient;
+
+		let cat = new Uint8Array(canvasW);
+
+		function draw () {
+			var arr = new Uint8Array(analyser.frequencyBinCount);
+			analyser.getByteFrequencyData(arr);
+
+			can.height = canvasH;
+			for (var i = 0, j = analyser.frequencyBinCount / 2; i < j; i++) {
+				ctx.moveTo(i, canvasH);
+				ctx.lineTo(i, canvasH - arr[i * 2]);
+				ctx.stroke();
+			}
+			requestAnimationFrame(draw);
+		}
+		draw();
+	},
+	_drawRectangleSpectrum: function (analyser) {
 		let opts = this.options,
 			can = document.getElementById(opts.canvas),
 			ctx = can.getContext('2d'),
@@ -68,17 +100,29 @@ Music.prototype = {
 		gradient.addColorStop(1, '#0f0');
 		gradient.addColorStop(0.5, '#ff0');
 		gradient.addColorStop(0, '#f00');
-		ctx.fillStyle = gradient;
+
+		let cat = new Uint8Array(lineNum);
 
 		function draw () {
 			var arr = new Uint8Array(analyser.frequencyBinCount);
 			analyser.getByteFrequencyData(arr);
+			// 步长
 			var step = Math.floor(analyser.frequencyBinCount / lineNum);
-
 			ctx.clearRect(0, 0, canvasW, canvasH);
+
 			for (var i = 0; i < lineNum; i++) {
-				var value = arr[i * step];
+				var index = i * step;
+				var value = arr[index];
+				// 比较帽头的值与柱形的高
+				if (cat[i] <= value) {
+					cat[i] = value;//立即被柱形顶上去
+				} else {
+					cat[i] -= 1;// 缓慢降落
+				}
+				ctx.fillStyle = gradient;
 				ctx.fillRect(12 * i, canvasH - 5 - value, 10, canvasW);
+				ctx.fillStyle = '#000';
+				ctx.fillRect(12 * i, canvasH - 10 - cat[i], 10, 5);
 			}
 			requestAnimationFrame(draw);
 		}
