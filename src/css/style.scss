@@ -6,36 +6,63 @@
 body, html {
 	height: 100%;
 	position: relative;
+	background-color: #607d8b;
+	overflow: hidden;
 }
-
-.music-wrapper form {
-	display: none;
+.title {
+	position: absolute;
+	color: #fff;
+	font-size: 2em;
+	transform: rotate(-90deg);
+	top: 200px;
+}
+.music-wrapper {
+	width: 800px;
+	margin: 20px auto;
+	form {
+		display: none;
+	}
 }
 
 .music-select {
 	
 	button {
-		border: 1px solid #ccc;
+		border: none;
 		background-color: #fff;
 		color: #333;
 		border-radius: 6px;
 		outline: none;
-		padding: .2em;
+		padding: .5em;
 		cursor: pointer;
 
 		&:hover {
-			background-color: #ccc;
+			background-color: #435760;
 			color: #fff;
 		}
 	}
-	
+
+	span {
+		border-bottom: 1px dashed #fff;
+		color: #143747;
+		cursor: default;
+	}
+	p {
+		color: #607d8b;
+	}
 	> section {
 		margin-top: 1em;
-		width: 240px;
+		width: 800px;
 		height: 100px;
+		line-height: 100px;
+	    text-align: center;
 		border: 1px solid #ccc;
 		border-radius: 6px;
 		background-color: #fff;
-		cursor: pointer;
+		cursor: default;
+	}
+
+	> section.canvasContainer {
+		background-color: transparent;
+		height: 300px;
 	}
 }

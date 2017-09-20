@@ -54,10 +54,17 @@ Music.prototype = {
 		}
 	},
 	_drawSpectrum: function (analyser) {
-		var ctx = this.ctx;
-		var self = this;
-		var lineNum = 800 / 12;	// 计算多少柱形
-		var gradient = ctx.createLinearGradient(0, 0, 0, 300);
+		let opts = this.options,
+			can = document.getElementById(opts.canvas),
+			ctx = can.getContext('2d'),
+			canvasW = opts.width,
+			canvasH = opts.height,
+			lineNum = canvasW / 12; // 计算多少柱形
+		
+		can.width = canvasW;
+		can.height = canvasH;
+
+		let gradient = ctx.createLinearGradient(0, 0, 0, 300);
 		gradient.addColorStop(1, '#0f0');
 		gradient.addColorStop(0.5, '#ff0');
 		gradient.addColorStop(0, '#f00');
@@ -68,10 +75,10 @@ Music.prototype = {
 			analyser.getByteFrequencyData(arr);
 			var step = Math.floor(analyser.frequencyBinCount / lineNum);
 
-			ctx.clearRect(0, 0, 800, 300);
+			ctx.clearRect(0, 0, canvasW, canvasH);
 			for (var i = 0; i < lineNum; i++) {
 				var value = arr[i * step];
-				ctx.fillRect(12 * i, 295 - value, 10, 300);
+				ctx.fillRect(12 * i, canvasH - 5 - value, 10, canvasW);
 			}
 			requestAnimationFrame(draw);
 		}
