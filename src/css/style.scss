@@ -1,0 +1,41 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body, html {
+	height: 100%;
+	position: relative;
+}
+
+.music-wrapper form {
+	display: none;
+}
+
+.music-select {
+	
+	button {
+		border: 1px solid #ccc;
+		background-color: #fff;
+		color: #333;
+		border-radius: 6px;
+		outline: none;
+		padding: .2em;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #ccc;
+			color: #fff;
+		}
+	}
+	
+	> section {
+		margin-top: 1em;
+		width: 240px;
+		height: 100px;
+		border: 1px solid #ccc;
+		border-radius: 6px;
+		background-color: #fff;
+		cursor: pointer;
+	}
+}
